@@ -172,6 +172,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
         validation_size: Optional[float] = None,
         batch_size: int = 512,
         use_gpu: Optional[bool] = None,
+        num_workers: int = 4,
         train_base_model: bool = True,
         lr: float = 1e-3,
         n_epochs_kl_warmup: int = 400,
@@ -263,6 +264,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
             indices=full_idx,
             batch_size=batch_size,
             pin_memory=pin_memory,
+            num_workers=num_workers,
         )
         self.train_indices_ = train_dl.indices
         self._unsupervised_task = VAETask(
@@ -287,6 +289,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
                 shuffle=True,
                 batch_size=batch_size,
                 pin_memory=pin_memory,
+                num_workers=num_workers,
             )
             sampler_callback = [SubSampleLabels()]
         else:
@@ -296,6 +299,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
                 indices=full_idx,
                 batch_size=batch_size,
                 pin_memory=pin_memory,
+                num_workers=num_workers,
             )
             sampler_callback = None
         self._semisupervised_trainer = Trainer(
