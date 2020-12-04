@@ -8,12 +8,13 @@ from anndata import AnnData
 
 from scvi import _CONSTANTS
 from scvi._compat import Literal
-from scvi.dataloaders import ConcatDataLoader, ScviDataLoader
+from scvi.dataloaders import SemiSupervisedDataLoader, ScviDataLoader
 from scvi.lightning import SemiSupervisedTask, Trainer, VAETask
 from scvi.modules import SCANVAE, VAE
 
 from ._scvi import SCVI
 from .base import ArchesMixin, BaseModelClass, RNASeqMixin, VAEMixin
+from scvi.lightning._sampling import SubSampleLabels
 
 logger = logging.getLogger(__name__)
 
@@ -121,10 +122,10 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
         self._label_mapping = self.scvi_setup_dict_["categorical_mappings"][key][
             "mapping"
         ]
-        original_key = self.scvi_setup_dict_["categorical_mappings"][key][
+        self.original_label_key = self.scvi_setup_dict_["categorical_mappings"][key][
             "original_key"
         ]
-        labels = np.asarray(self.adata.obs[original_key]).ravel()
+        labels = np.asarray(self.adata.obs[self.original_label_key]).ravel()
         self._code_to_label = {i: l for i, l in enumerate(self._label_mapping)}
         self._unlabeled_indices = np.argwhere(
             labels == self.unlabeled_category_
@@ -167,6 +168,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
         self,
         n_epochs_unsupervised: Optional[int] = None,
         n_epochs_semisupervised: Optional[int] = None,
+        n_samples_per_label: Optional[float] = None,
         train_size: float = 0.9,
         validation_size: Optional[float] = None,
         batch_size: int = 512,
@@ -271,19 +273,28 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
         self.model.load_state_dict(self._base_model.state_dict(), strict=False)
 
         self._semisupervised_task = SemiSupervisedTask(self.model)
-        self._semisupervised_trainer = Trainer(
-            max_epochs=n_epochs_semisupervised, gpus=None
-        )
 
         # if we have labelled cells, we want to pass them through the classifier
         # else we only pass the full dataset
         full_idx = np.arange(self.adata.n_obs)
         if len(self._labeled_indices) != 0:
-            semisupervised_train_dl = ConcatDataLoader(
-                self.adata, [full_idx, self._labeled_indices]
+            semisupervised_train_dl = SemiSupervisedDataLoader(
+                self.adata,
+                full_idx,
+                self.original_label_key,
+                self.unlabeled_category_,
+                n_samples_per_label,
             )
+            sampler_callback = [SubSampleLabels()]
         else:
             semisupervised_train_dl = ScviDataLoader(self.adata, full_idx)
+            sampler_callback = None
+        self._semisupervised_trainer = Trainer(
+            max_epochs=n_epochs_semisupervised,
+            gpus=None,
+            callbacks=sampler_callback,
+        )
+
         self._semisupervised_trainer.fit(
             self._semisupervised_task, semisupervised_train_dl
         )
