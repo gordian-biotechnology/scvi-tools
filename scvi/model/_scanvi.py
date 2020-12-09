@@ -81,9 +81,12 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
         dispersion: Literal["gene", "gene-batch", "gene-label", "gene-cell"] = "gene",
         gene_likelihood: Literal["zinb", "nb", "poisson"] = "zinb",
         use_gpu: bool = True,
-        **model_kwargs,
+        vae_model_kwargs: dict = {},
+        scanvae_model_kwargs: dict = {},
     ):
         super(SCANVI, self).__init__(adata, use_gpu=use_gpu)
+        vae_model_kwargs = dict(vae_model_kwargs)
+        scanvae_model_kwargs = dict(scanvae_model_kwargs)
         self.unlabeled_category_ = unlabeled_category
 
         if pretrained_model is not None:
@@ -101,7 +104,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
                 dropout_rate=dropout_rate,
                 dispersion=dispersion,
                 gene_likelihood=gene_likelihood,
-                **model_kwargs,
+                **vae_model_kwargs,
             )
             self._is_trained_base = False
         self.model = SCANVAE(
@@ -114,7 +117,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
             dropout_rate=dropout_rate,
             dispersion=dispersion,
             gene_likelihood=gene_likelihood,
-            **model_kwargs,
+            **scanvae_model_kwargs,
         )
 
         # get indices for labeled and unlabeled cells
