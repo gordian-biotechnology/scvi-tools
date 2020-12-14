@@ -152,7 +152,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
         return SemiSupervisedTask
 
     @property
-    def _scvi_dl_class(self):
+    def _data_loader_cls(self):
         return ScviDataLoader
 
     @property
@@ -248,7 +248,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
             gpus = None
             pin_memory = False
         self.trainer = Trainer(
-            max_epochs=n_epochs_unsupervised,
+            n_epochs=n_epochs_unsupervised,
             gpus=gpus,
             **unsupervised_trainer_kwargs,
         )
@@ -272,7 +272,7 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
 
         self._semisupervised_task = SemiSupervisedTask(self.model)
         self._semisupervised_trainer = Trainer(
-            max_epochs=n_epochs_semisupervised, gpus=None
+            n_epochs=n_epochs_semisupervised, gpus=None
         )
 
         # if we have labelled cells, we want to pass them through the classifier
