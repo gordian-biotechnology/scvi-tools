@@ -14,7 +14,7 @@ from scipy.sparse import isspmatrix
 from rich.console import Console
 
 import scvi
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi._compat import Literal
 from scvi.data._utils import (
     _check_nonnegative_integers,

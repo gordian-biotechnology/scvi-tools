@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi._compat import Literal
 from scvi.core.data_loaders import AnnotationDataLoader
 from scvi.data._anndata import get_from_registry

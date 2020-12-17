@@ -11,7 +11,8 @@ import torch
 from anndata import AnnData
 from rich.text import Text
 
-from scvi import _CONSTANTS, settings
+from scvi._constants import _CONSTANTS
+from scvi import settings
 from scvi.data import get_from_registry, transfer_anndata_setup
 from scvi.data._utils import (
     _check_anndata_setup_equivalence,

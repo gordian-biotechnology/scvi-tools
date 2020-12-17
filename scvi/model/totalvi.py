@@ -8,7 +8,7 @@ import pandas as pd
 import torch
 from anndata import AnnData
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi._compat import Literal
 from scvi._docs import doc_differential_expression
 from scvi._utils import _doc_params

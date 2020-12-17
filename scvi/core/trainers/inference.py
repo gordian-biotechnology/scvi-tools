@@ -6,7 +6,7 @@ import anndata
 import torch
 from numpy import ceil
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 
 from .trainer import Trainer
 

@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from sklearn.neighbors import KNeighborsClassifier
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi.core import unsupervised_clustering_accuracy
 
 from .scvi_data_loader import ScviDataLoader

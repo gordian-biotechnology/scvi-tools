@@ -7,7 +7,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi.core._log_likelihood import (
     compute_elbo,
     compute_marginal_log_likelihood_autozi,

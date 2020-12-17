@@ -7,7 +7,7 @@ import numpy as np
 import torch
 from anndata import AnnData, read
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi.data import transfer_anndata_setup
 from scvi.core.models import BaseModelClass, VAEMixin
 from scvi.core.modules import JVAE, Classifier

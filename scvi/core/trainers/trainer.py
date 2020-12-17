@@ -11,7 +11,7 @@ import torch
 from sklearn.model_selection._split import _validate_shuffle_split
 from torch.utils.data.sampler import SubsetRandomSampler
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi._utils import track
 from scvi.core.data_loaders import ScviDataLoader
 

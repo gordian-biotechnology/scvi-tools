@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from anndata import AnnData
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi._compat import Literal
 from scvi.core.data_loaders import AnnotationDataLoader
 from scvi.core.models import ArchesMixin, BaseModelClass, RNASeqMixin, VAEMixin

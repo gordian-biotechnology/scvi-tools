@@ -4,7 +4,7 @@ from typing import Union
 import anndata
 import torch
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi.core.data_loaders import TotalDataLoader
 from scvi.core.modules import TOTALVAE, Classifier
 from scvi.core.modules.utils import one_hot

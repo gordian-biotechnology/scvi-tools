@@ -8,7 +8,7 @@ import numpy as np
 import torch
 from torch import nn
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 from scvi.core._log_likelihood import compute_elbo
 from scvi.core.data_loaders import ScviDataLoader
 from scvi.core.trainers.trainer import Trainer

@@ -5,7 +5,7 @@ import torch
 from torch import logsumexp
 from torch.distributions import Beta, Normal
 
-from scvi import _CONSTANTS
+from scvi._constants import _CONSTANTS
 
 
 def compute_elbo(vae, data_loader, **kwargs):
